@@ -44,3 +44,17 @@ lspconfig.clangd.setup{
 	capabilities = capabilities,
 
 }
+lspconfig.pyright.setup{
+    setting = {
+        python = {
+            venv = true
+        }
+    },
+
+	on_attach = function(client, buffer)
+	client.server_capabilities.signatureHelpProvider = false
+	on_attach(client, bunfr)
+	end,
+	capabilities = capabilities,
+
+}
