@@ -1,7 +1,7 @@
 local base = require("lsp-zero")
 local on_attach = base.on_attach
 local capabilities = base.capabilities
-
+base.preset("recommended")
 local lspconfig = require('lspconfig')
 base.set_preferences({
     suggest_lsp_servers = false,
@@ -12,7 +12,6 @@ base.set_preferences({
         info = 'I'
     }
 })
-
 
 vim.diagnostic.config({
     virtual_text = true
