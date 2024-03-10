@@ -34,11 +34,17 @@ end)
 
 
 base.setup()
+lspconfig.tsserver.setup{
+    on_attach = function(client, buffer)
+	client.server_capabilities.signatureHelpProvider = false
+	end,
+	capabilities = capabilities,
+
+}
 
 lspconfig.clangd.setup{
 	on_attach = function(client, buffer)
 	client.server_capabilities.signatureHelpProvider = false
-	on_attach(client, bunfr)
 	end,
 	capabilities = capabilities,
 
