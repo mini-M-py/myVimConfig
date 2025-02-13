@@ -3,6 +3,14 @@ local on_attach = base.on_attach
 local capabilities = base.capabilities
 base.preset("recommended")
 local lspconfig = require('lspconfig')
+local mason = require('mason')
+local mason_lspconfig = require('mason-lspconfig')
+
+mason.setup()
+mason_lspconfig.setup({
+    ensure_installed = {"lua_ls", "html", "cssls", "ts_ls", "pylsp"}
+})
+
 base.set_preferences({
     suggest_lsp_servers = false,
     sign_icons = {
@@ -33,24 +41,60 @@ on_attach(function(client, bufnr)
 end)
 
 
-base.setup()
-lspconfig.tsserver.setup{
+lspconfig.lua_ls.setup{
     on_attach = function(client, buffer)
-	client.server_capabilities.signatureHelpProvider = false
-	end,
-	capabilities = capabilities,
+        client.server_capabilities.signatureHelpProvider = false
+    end,
+    capabilities = capabilities,
+}
 
+lspconfig.ts_ls.setup{
+    on_attach = function(client, buffer)
+        client.server_capabilities.signatureHelpProvider = false
+    end,
+    capabilities = capabilities
+}
+
+lspconfig.cssls.setup{
+    on_attach = function (client, buffer)
+        client.server_capabilities.signatureHelpProvider = false;
+    end,
+    capabilities = capabilities,
+}
+
+lspconfig.html.setup {
+    on_attach = function(client, buffer)
+        client.server_capabilities.signatureHelpProvider = false
+    end,
+    capabilities = capabilities, -- Ensure capabilities are set
+    settings = { -- Move filetypes and init_options inside settings
+        html = {
+            filetypes = { "html", "templ" },
+            init_options = {
+                provideFormatter = true,
+                embeddedLanguages = {
+                    css = true,
+                    javascript = true,
+                },
+                configurationSection = { "html", "css", "javascript" },
+            }
+        }
+    }
 }
 
 lspconfig.clangd.setup{
 	on_attach = function(client, buffer)
-	client.server_capabilities.signatureHelpProvider = false
+	    client.server_capabilities.signatureHelpProvider = false
 	end,
 	capabilities = capabilities,
+    filetypes = {'c', 'cpp', 'objc', 'objcpp', 'cuda' }
 
 }
+
 lspconfig.pylsp.setup {
     on_attach = function(client, buffer)
+        client.server_capabilities.signatureHelpProvider = false
+    end,
     settings = {
         pylsp = {
             plugins = {
@@ -65,7 +109,10 @@ lspconfig.pylsp.setup {
                 pyls_isort = true
             },
         },
-    }
-    end,
+    },
+
     capabilities = capabilities
 }
+
+base.setup()
+

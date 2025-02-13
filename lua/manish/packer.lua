@@ -13,19 +13,22 @@ return require('packer').startup(function(use)
 	  requires = { {'nvim-lua/plenary.nvim'} }
   }
   use({ 'rose-pine/neovim', as = 'rose-pine' })
+  use('slugbyte/lackluster.nvim')
+  use('craftzdog/solarized-osaka.nvim')
   use( 'nvim-treesitter/nvim-treesitter', {run = ':TSUpdate'})
   use( 'nvim-treesitter/playground')
   use( 'ThePrimeagen/harpoon')
   use('mbbill/undotree')
   use('tpope/vim-fugitive')
   use ( 'windwp/nvim-autopairs')
+  use { "windwp/nvim-ts-autotag" }
   use {
   'VonHeikemen/lsp-zero.nvim',
   branch = 'v3.x',
   requires = {
     --- Uncomment these if you want to manage LSP servers from neovim
-    -- {'williamboman/mason.nvim'},
-    -- {'williamboman/mason-lspconfig.nvim'},
+    {'williamboman/mason.nvim'},
+    {'williamboman/mason-lspconfig.nvim'},
 
     -- LSP Support
     {'neovim/nvim-lspconfig'},
