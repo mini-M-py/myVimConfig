@@ -8,4 +8,4 @@ function ColorMyPencils(color)
 end
 
 
-ColorMyPencils('solarized-osaka')
+ColorMyPencils("tokyonight-night")
