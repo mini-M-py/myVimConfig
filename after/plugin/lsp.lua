@@ -1,84 +1,100 @@
 local lsp_zero = require('lsp-zero')
-
+local vi = vim
 -- Your on_attach: all keymaps go here
 lsp_zero.on_attach(function(client, bufnr)
   local opts = {buffer = bufnr, remap = false}
 
   -- Your mappings
-  vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
-  vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
-  vim.keymap.set("n", "<leader>vws", function() vim.lsp.buf.workspace_symbol() end, opts)
-  vim.keymap.set("n", "<leader>vd", function() vim.diagnostic.open_float() end, opts)
-  vim.keymap.set("n", "[d", function() vim.diagnostic.goto_next() end, opts)
-  vim.keymap.set("n", "]d", function() vim.diagnostic.goto_prev() end, opts)
-  vim.keymap.set("n", "<leader>vca", function() vim.lsp.buf.code_action() end, opts)
-  vim.keymap.set("n", "<leader>vrr", function() vim.lsp.buf.references() end, opts)
-  vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end, opts)
-  vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
+  vi.keymap.set("n", "gd", function() vi.lsp.buf.definition() end, opts)
+  vi.keymap.set("n", "K", function() vi.lsp.buf.hover() end, opts)
+  vi.keymap.set("n", "<leader>vws", function() vi.lsp.buf.workspace_symbol() end, opts)
+  vi.keymap.set("n", "<leader>vd", function() vi.diagnostic.open_float() end, opts)
+  vi.keymap.set("n", "[d", function() vi.diagnostic.goto_next() end, opts)
+  vi.keymap.set("n", "]d", function() vi.diagnostic.goto_prev() end, opts)
+  vi.keymap.set("n", "<leader>vca", function() vi.lsp.buf.code_action() end, opts)
+  vi.keymap.set("n", "<leader>vrr", function() vi.lsp.buf.references() end, opts)
+  vi.keymap.set("n", "<leader>vrn", function() vi.lsp.buf.rename() end, opts)
+  vi.keymap.set("i", "<C-h>", function() vi.lsp.buf.signature_help() end, opts)
 
   -- Disable signature help
   client.server_capabilities.signatureHelpProvider = false
 end)
 
 -- Diagnostic settings
-vim.diagnostic.config({
-  virtual_text = true
+vi.diagnostic.config({
+  virtual_text = {
+      prefix = '●',
+      spacing = 4,
+  },
+  signs = {
+      text = {
+        [vi.diagnostic.severity.ERROR] = "",
+        [vi.diagnostic.severity.WARN] = "",
+		[vi.diagnostic.severity.INFO] = "",
+		[vi.diagnostic.severity.HINT] = "",
+      }
+  },
+  update_in_insert = false,
+  severity_sort = true
+
 })
 
 -- Mason setup
 require('mason').setup()
 require('mason-lspconfig').setup({
-  ensure_installed = {"lua_ls", "html", "cssls", "ts_ls", "pylsp", "clangd"},
-  handlers = {
-    lsp_zero.default_setup, -- default for all
+  ensure_installed = { "ts_ls", "lua_ls", "html", "pylsp"},
+handlers = {
+  lsp_zero.default_setup,
+  lua_ls = function()
+    local opts = lsp_zero.nvi_lua_ls()
+    require('lspconfig').lua_ls.setup(opts)
+  end,
 
-    -- Lua LS
-    lua_ls = function()
-      local opts = lsp_zero.nvim_lua_ls()
-      require('lspconfig').lua_ls.setup(opts)
-    end,
+  clangd = function()
+        require('lspconfig').clangd.setup({
+            cmd = { "clangd" },
+            filetypes = { "c", "c++"},
+            capabilities = lsp_zero.capabilities
+        })
+  end,
 
-    -- HTML
-    html = function()
-      require('lspconfig').html.setup({
-        capabilities = lsp_zero.capabilities,
-        settings = {
-          html = {
-            filetypes = { "html", "templ" },
-            init_options = {
-              provideFormatter = true,
-              embeddedLanguages = {
-                css = true,
-                javascript = true,
-              },
-              configurationSection = { "html", "css", "javascript" },
-            }
+  html = function()
+    require('lspconfig').html.setup({
+      capabilities = lsp_zero.capabilities,
+      settings = {
+        html = {
+          filetypes = { "html", "templ" },
+          init_options = {
+            provideFormatter = true,
+            embeddedLanguages = {
+              css = true,
+              javascript = true,
+            },
+            configurationSection = { "html", "css", "javascript" },
           }
         }
-      })
-    end,
+      }
+    })
+  end,
 
-    -- Pylsp
-    pylsp = function()
-      require('lspconfig').pylsp.setup({
+  pylsp = function()
+    require('lspconfig').pylsp.setup({
         settings = {
-          pylsp = {
-            plugins = {
-              black = { enabled = true },
-              autopep8 = { enabled = true },
-              yapf = { enabled = false },
-              pylint = { enabled = true },
-              pyflakes = { enabled = true },
-              pycodestyle = { enabled = false },
-              pylsp_mypy = { enabled = true },
-              jedi_completion = { fuzzy = true },
-              pyls_isort = { enabled = true }
-            },
-          },
+            pylsp = {
+                plugins = {
+                    reporting = { enabled = false },
+                    pycodestyle = { enabled = false },
+                    flake8 = { enabled = false },
+                    pylint = { enabled = false },
+                    pyflakes = { enabled = false },
+                    mypy = { enabled = false },
+                }
+            }
         },
-        capabilities = lsp_zero.capabilities
-      })
-    end,
-  },
+      capabilities = lsp_zero.capabilities
+    })
+  end,
+
+}
 })
 
