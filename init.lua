@@ -16,10 +16,11 @@ vim.pack.add({
 	{ src = "https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim" },
     { src = "https://github.com/folke/tokyonight.nvim.git" },
     { src = "https://github.com/tiwari-krishna/retroWire-nvim" },
-    { src = "https://github.com/tiwari-krishna/nvHopper.nvim.git" }
+    { src = "https://github.com/tiwari-krishna/nvHopper.nvim.git" },
+    { src = "https://github.com/ThePrimeagen/vim-be-good.git" }
 })
 
 require("lsp")
 require("extra")
 require("retroWire")
-
+require("comment")
