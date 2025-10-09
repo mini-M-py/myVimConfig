@@ -13,7 +13,7 @@ function ColorMyPencils(color)
 	vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none"})
 
 end
-ColorMyPencils("tokyonight-night")
+ColorMyPencils("tokyonight-moon")
 
 require("fzf-lua").setup({
     winopts = {
@@ -96,6 +96,6 @@ vim.keymap.set("n", "<leader>ls", "<CMD>LivePreview close<CR>", { desc = "Live P
 --nvhopper
 require("hopper").setup({
 	open_mapping = "<leader>m",
-	jump_mappings = {'<leader>1', '<leader>2', '<leader>3' }
+	jump_mappings = {'<leader>1', '<leader>2', '<leader>3', '<leader>4', '<leader>5'}
 })
 

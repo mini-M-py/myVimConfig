@@ -2,7 +2,7 @@ local blink = require("blink.cmp")
 
 return {
 	cmd = { "clangd", "--background-index", "--clang-tidy", "--completion-style=detailed", "--header-insertion=never" },
-	filetypes = { "c", "cpp", "objc", "objcpp" },
+	filetypes = { "c", "cpp", "objc", "objcpp", "cu" },
 	root_markers = {
 		".clangd",
 		".clang-tidy",
